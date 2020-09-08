@@ -1,0 +1,18 @@
+
+type Query {
+    info:String!
+    feed : [Link!]!
+    getLink(id:ID!):Link
+}
+
+type Mutation{
+    delete(id:ID!):Link
+    put(id:ID!, url:String, description:String):Link
+    post(url:String!, description: String!): Link!
+}
+
+type Link{
+    id: ID!
+    description : String!
+    url: String!
+}
