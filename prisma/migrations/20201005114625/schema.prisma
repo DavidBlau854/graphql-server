@@ -1,6 +1,6 @@
 // 1
 datasource db {
-  provider = "sqlite" 
+  provider = "sqlite"
   url = "***"
 }
 
@@ -9,20 +9,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// 3
 model Link {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   description String
   url         String
-  postedById Int?
-  posteBy User? @relation(fields: [postedById], references: [id])
+  postedById  Int?
+  posteBy     User?    @relation(fields: [postedById], references: [id])
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
   password String
-  links Link[]
+  links    Link[]
 }

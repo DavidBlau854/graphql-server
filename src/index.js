@@ -1,26 +1,27 @@
-const { GraphQLServer } = require('graphql-yoga')
+const { GraphQLServer, PubSub } = require('graphql-yoga')
 const { PrismaClient } = require('@prisma/client')
 
-const prisma = new PrismaClient()
+const Query = require('./resolvers/Query')
+const Mutation = require('./resolvers/Mutation')
+const User = require('./resolvers/User')
+const Link = require('./resolvers/Link')
+
+
 
 const resolvers = {
-    Query: {
-        info: () => 'this is the API of Hackernews',
-        feed: (async (parent, args, context) => context.prisma.link.findMany()),
-    },
-    Mutation: {
-        post: (parent, args, context, info) => {
-            const link = context.prisma.link.create({
-                data: {
-                    url: args.url,
-                    description: args.description,
-                }
-            })
-            return link
-        }
-    },
+    Query,
+    Mutation,
+    User,
+    Link
 }
 
-const server = new GraphQLServer({ typeDefs: './src/schema.graphql', resolvers, context: { prisma } })
-server.start(() => console.log(`server is running fine`))
+const prisma = new PrismaClient()
+const pubsub = new PubSub()
+const server = new GraphQLServer({
+    typeDefs: './src/schema.graphql',
+    resolvers,
+    context: request => { return { ...request, prisma } }
+})
+
+server.start(() => console.log(`server is running on 4000`))
 
