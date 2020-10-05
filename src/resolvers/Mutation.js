@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const { APP_SECRET, getUserId } = require('../utils')
+const { newLink } = require('./Subscription')
 
 
 function post(parent, args, context, info) {
@@ -13,6 +14,8 @@ function post(parent, args, context, info) {
             postedBy: { connect: { id: userId } }
         }
     })
+
+    context.pubsub.publish('NEW_LINK', link)
     return link
 }
 
