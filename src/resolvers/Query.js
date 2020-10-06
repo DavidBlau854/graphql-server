@@ -2,24 +2,21 @@ function info() {
     return 'this is the API of Hackernews'
 
 }
-/**
- * notice that filter passed in args.filter are only checked against desc or url on the links
- * 
- */
-async function feed(parent, args, context) {
-    const searchString = args.filter
+
+function feed(parent, args, context) {
+    const { filter, skip, take } = args
     let query = {}
 
-    if (searchString) {
+    if (filter) {
         query = {
             OR: [
-                { description: { contains: searchString } },
-                { url: { contains: searchString } },
+                { description: { contains: filter } },
+                { url: { contains: filter } },
             ]
         }
     }
 
-    return context.prisma.link.findMany({ where: query })
+    return context.prisma.link.findMany({ where: query, skip, take })
 }
 
 module.exports = {
